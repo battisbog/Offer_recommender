@@ -4,7 +4,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.preprocessing import StandardScaler, OneHotEncoder, MinMaxScaler
 
 # Sample dataset with additional features
 data = {
@@ -25,8 +25,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 preprocessor = ColumnTransformer(
     transformers=[
         ('text', TfidfVectorizer(), 'transaction_name'),
-        ('num', StandardScaler(), ['amount']),
-        ('cat', OneHotEncoder(), ['location'])
+        ('num', MinMaxScaler(), ['amount']),  # Replacing StandardScaler with MinMaxScaler
+        ('cat', OneHotEncoder(handle_unknown='ignore'), ['location'])
     ])
 
 X_train_transformed = preprocessor.fit_transform(X_train)
